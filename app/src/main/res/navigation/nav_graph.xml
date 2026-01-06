@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.visionmate.LoginFragment">
+
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.visionmate.startinginterface.RegisterFragment" />
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.visionmate.StartingInterface.WelcomeFragment"
+        android:label="WelcomeFragment" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_guardiansSetupFragment"
+            app:destination="@id/guardiansSetupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/guardiansSetupFragment"
+        android:name="com.example.visionmate.StartingInterface.GuardiansSetupFragment"
+        android:label="GuardiansSetupFragment" />
+</navigation>
