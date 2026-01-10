@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/readTextFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -31,4 +31,12 @@
         android:id="@+id/guardiansSetupFragment"
         android:name="com.example.visionmate.StartingInterface.GuardiansSetupFragment"
         android:label="GuardiansSetupFragment" />
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.myvisionmate.CameraFragment"
+        android:label="CameraFragment" />
+    <fragment
+        android:id="@+id/readTextFragment"
+        android:name="com.example.visionmate.ui.readtext.ReadTextFragment"
+        android:label="ReadTextFragment" />
 </navigation>

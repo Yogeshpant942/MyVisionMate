@@ -67,5 +67,12 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.3.1")
     implementation("androidx.camera:camera-lifecycle:1.3.1")
     implementation("androidx.camera:camera-view:1.3.1")
+    implementation("com.google.mlkit:text-recognition:16.0.0")
+
+    // Google Play Services Location
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    // Gson (for JSON parsing)
+    implementation("com.google.code.gson:gson:2.10.1")
+
 
 }

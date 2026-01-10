@@ -2,6 +2,10 @@ package com.example.myvisionmate.Repositary
 
 import android.content.Context
 import com.example.myvisionmate.ApiInterface
+import com.example.myvisionmate.Models.BaseReponse
+import com.example.myvisionmate.Models.GuardianReponse
+import com.example.myvisionmate.Models.GuardianRequest
+import com.example.myvisionmate.Models.GuardiansListResponse
 import com.example.visionmate.Models.AuthResponse
 import com.example.visionmate.Models.userLoginRequest
 import com.example.visionmate.Models.userRegister
@@ -54,7 +58,19 @@ class Repositary(private val api: ApiInterface) {
         return getToken(context) != null
     }
 
+   suspend fun registerGuardian(token:String,name:String,phone: String): Response<GuardianReponse>{
+       val request = GuardianRequest(
+           name = name,
+           phone= phone
+       )
+       return api.registerGuardian("Bearer $token",request)
+    }
 
+    suspend fun getAllGuardian(token: String): Response<GuardiansListResponse>{
+        return api.getAllGuardian("Bearer $token")
+    }
 
-    fun registerGuardian()
+    suspend fun deleteGuardian(guardianId:String,token:String): Response<BaseReponse>{
+        return api.deleteGuardian(guardianId,"Bearer $token")
+    }
 }
