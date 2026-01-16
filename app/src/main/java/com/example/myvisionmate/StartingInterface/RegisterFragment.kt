@@ -60,6 +60,7 @@ class RegisterFragment : Fragment() {
             when (result) {
 
                 is LoginAndSignUPViewModel.AuthResult.Success -> {
+                    viewModel.saveToken(result.token,requireContext())
                     saveUserInfo(requireContext(), result.user)
 
                     Toast.makeText(

@@ -1,6 +1,7 @@
 package com.example.visionmate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,6 @@ class LoginFragment : Fragment() {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        // -------- ViewModel setup --------
         val api: ApiInterface = RetrofitService.api
         val repository = Repositary(api)
         val factory = LogInAndSignUpFactory(repository)
@@ -37,12 +37,10 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this, factory)
             .get(LoginAndSignUPViewModel::class.java)
 
-        // -------- Login button --------
         binding.btnLogin.setOnClickListener {
             loginUser()
         }
 
-        // -------- Navigate to Register --------
         binding.tvSignUp.setOnClickListener {
             findNavController()
                 .navigate(R.id.action_loginFragment_to_registerFragment)
@@ -66,6 +64,11 @@ class LoginFragment : Fragment() {
 
                 is LoginAndSignUPViewModel.AuthResult.Success -> {
                     viewModel.saveToken(result.token, requireContext())
+                    val savedToken = viewModel.isLoggedIn(requireContext())
+                    Log.d("loginFragment", "tokenSaved: $savedToken")
+                    Log.d("LoginFragment", "Token value: ${result.token}")
+
+
 
                     Toast.makeText(
                         requireContext(),

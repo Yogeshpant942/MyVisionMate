@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "55340221420",
+    "project_id": "visionmate-c723d",
+    "storage_bucket": "visionmate-c723d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55340221420:android:2c9b6b4ab8e581432ef6c9",
+        "android_client_info": {
+          "package_name": "com.example.myvisionmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_3pP5plkUWaP3uzGJcUVLig6muWcejKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

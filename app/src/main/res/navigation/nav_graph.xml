@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/readTextFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -30,7 +30,11 @@
     <fragment
         android:id="@+id/guardiansSetupFragment"
         android:name="com.example.visionmate.StartingInterface.GuardiansSetupFragment"
-        android:label="GuardiansSetupFragment" />
+        android:label="GuardiansSetupFragment" >
+        <action
+            android:id="@+id/action_guardiansSetupFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/cameraFragment"
         android:name="com.example.myvisionmate.CameraFragment"
@@ -39,4 +43,22 @@
         android:id="@+id/readTextFragment"
         android:name="com.example.visionmate.ui.readtext.ReadTextFragment"
         android:label="ReadTextFragment" />
+    <fragment
+        android:id="@+id/describeSurroundingsFragment"
+        android:name="com.example.visionmate.ui.describe.DescribeSurroundingsFragment"
+        android:label="DescribeSurroundingsFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.myvisionmate.StartingInterface.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_describeSurroundingsFragment"
+            app:destination="@id/describeSurroundingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_readTextFragment"
+            app:destination="@id/readTextFragment" />
+    </fragment>
 </navigation>

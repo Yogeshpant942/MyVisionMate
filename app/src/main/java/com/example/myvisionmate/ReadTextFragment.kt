@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.OptIn
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -97,7 +98,6 @@ class ReadTextFragment : Fragment() {
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build()
-
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
@@ -115,6 +115,7 @@ class ReadTextFragment : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
+    @OptIn(ExperimentalGetImage::class)
     private fun setupClickListeners() {
         binding.btnCaptureText.setOnClickListener {
             captureAndReadText()
@@ -128,13 +129,11 @@ class ReadTextFragment : Fragment() {
             copyTextToClipboard()
         }
     }
-
     @androidx.camera.core.ExperimentalGetImage
     private fun captureAndReadText() {
         binding.progressBar.visibility = View.VISIBLE
         binding.btnCaptureText.isEnabled = false
         speak("Capturing image")
-
         imageCapture?.takePicture(
             cameraExecutor,
             object : ImageCapture.OnImageCapturedCallback() {

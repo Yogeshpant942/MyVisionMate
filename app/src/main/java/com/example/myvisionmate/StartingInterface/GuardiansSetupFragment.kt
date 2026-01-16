@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.myvisionmate.ApiInterface
 import com.example.myvisionmate.Factory.GuardianViewModelFactory
 import com.example.myvisionmate.Models.Guardian
+import com.example.myvisionmate.R
 import com.example.myvisionmate.Repositary.Repositary
 import com.example.myvisionmate.RetrofitService
 import com.example.myvisionmate.ViewModel.GuardianViewModel
@@ -31,12 +33,14 @@ class GuardiansSetupFragment : Fragment() {
        setUpUI()
         observeViewModel()
         loadGuardian()
+        binding.btnNext.setOnClickListener {
+            findNavController().navigate(R.id.action_guardiansSetupFragment_to_homeFragment)
+        }
         return binding.root
     }
 
     private fun observeViewModel() {
 
-        //observe guardian list
         lifecycleScope.launch {
             viewModel.gaurdian.collect { guardians ->
                 updateUi(guardians)
@@ -98,7 +102,6 @@ class GuardiansSetupFragment : Fragment() {
             binding.tvEmptyState.visibility = View.GONE
             binding.rvGuardians.visibility = View.VISIBLE
 
-            // Update adapter
         }
 
     }
