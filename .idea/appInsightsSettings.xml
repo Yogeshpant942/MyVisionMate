@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.myvisionmate" />
+                  <option name="mobileSdkAppId" value="1:55340221420:android:2c9b6b4ab8e581432ef6c9" />
+                  <option name="projectId" value="visionmate-c723d" />
+                  <option name="projectNumber" value="55340221420" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
