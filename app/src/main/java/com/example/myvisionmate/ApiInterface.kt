@@ -17,6 +17,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import kotlin.io.encoding.Base64
 
@@ -39,6 +40,10 @@ interface ApiInterface {
 
     @DELETE("delete/:id")
     suspend fun deleteGuardian(@Path("id") guardianId:String,@Header("Authorization")token:String): Response<BaseReponse>
+
+
+    @PUT("auth/updateUser")
+    suspend fun updateUser()
 
 
     
