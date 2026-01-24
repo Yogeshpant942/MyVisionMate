@@ -8,8 +8,10 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myvisionmate.ApiInterface
 import com.example.myvisionmate.Factory.GuardianViewModelFactory
+import com.example.myvisionmate.GuardianAdapter
 import com.example.myvisionmate.Models.Guardian
 import com.example.myvisionmate.R
 import com.example.myvisionmate.Repositary.Repositary
@@ -17,9 +19,9 @@ import com.example.myvisionmate.RetrofitService
 import com.example.myvisionmate.ViewModel.GuardianViewModel
 import com.example.myvisionmate.databinding.FragmentGuardiansSetupBinding
 import kotlinx.coroutines.launch
-
 class GuardiansSetupFragment : Fragment() {
     lateinit var binding: FragmentGuardiansSetupBinding
+    private lateinit var  adapter : GuardianAdapter
     lateinit var viewModel: GuardianViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +33,7 @@ class GuardiansSetupFragment : Fragment() {
         val factory = GuardianViewModelFactory(repo)
         viewModel = ViewModelProvider(this,factory).get(GuardianViewModel::class)
        setUpUI()
+        setUpRecyclerView()
         observeViewModel()
         loadGuardian()
         binding.btnNext.setOnClickListener {
@@ -46,7 +49,6 @@ class GuardiansSetupFragment : Fragment() {
                 updateUi(guardians)
             }
         }
-        //observe result
         lifecycleScope.launch {
             viewModel.guardianResult.collect { result ->
                 when(result){
@@ -66,6 +68,23 @@ class GuardiansSetupFragment : Fragment() {
                     null->{}
                 }
             }
+        }
+    }
+    fun setUpRecyclerView(){
+        adapter = GuardianAdapter{guardian->
+            val token = getAuthToken()
+            if(token!=null){
+                viewModel.deleteGuardian(token, guardian._id)
+            }
+            else {
+                Toast.makeText(requireContext(), "Login required", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+        binding.rvGuardians.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = adapter
+            setHasFixedSize(true)
         }
     }
 
@@ -101,10 +120,6 @@ class GuardiansSetupFragment : Fragment() {
         else{
             binding.tvEmptyState.visibility = View.GONE
             binding.rvGuardians.visibility = View.VISIBLE
-
         }
-
     }
-
-
 }

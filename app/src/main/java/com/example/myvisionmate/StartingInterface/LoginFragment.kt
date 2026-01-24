@@ -18,7 +18,6 @@ import com.example.visionmate.Factory.LogInAndSignUpFactory
 import com.example.visionmate.ViewModel.LoginAndSignUPViewModel
 
 class LoginFragment : Fragment() {
-
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginAndSignUPViewModel
 
@@ -27,9 +26,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentLoginBinding.inflate(inflater, container, false)
-
         val api: ApiInterface = RetrofitService.api
         val repository = Repositary(api)
         val factory = LogInAndSignUpFactory(repository)
@@ -67,8 +64,6 @@ class LoginFragment : Fragment() {
                     val savedToken = viewModel.isLoggedIn(requireContext())
                     Log.d("loginFragment", "tokenSaved: $savedToken")
                     Log.d("LoginFragment", "Token value: ${result.token}")
-
-
 
                     Toast.makeText(
                         requireContext(),

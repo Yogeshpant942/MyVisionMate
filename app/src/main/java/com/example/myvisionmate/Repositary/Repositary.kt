@@ -3,9 +3,13 @@ package com.example.myvisionmate.Repositary
 import android.content.Context
 import com.example.myvisionmate.ApiInterface
 import com.example.myvisionmate.Models.BaseReponse
+import com.example.myvisionmate.Models.ChangePasswordRequest
+import com.example.myvisionmate.Models.ChangePasswordResponse
 import com.example.myvisionmate.Models.GuardianReponse
 import com.example.myvisionmate.Models.GuardianRequest
 import com.example.myvisionmate.Models.GuardiansListResponse
+import com.example.myvisionmate.Models.UserResponse
+import com.example.myvisionmate.Models.UserUpdateRequest
 import com.example.visionmate.Models.AuthResponse
 import com.example.visionmate.Models.userLoginRequest
 import com.example.visionmate.Models.userRegister
@@ -69,8 +73,21 @@ class Repositary(private val api: ApiInterface) {
     suspend fun getAllGuardian(token: String): Response<GuardiansListResponse>{
         return api.getAllGuardian("Bearer $token")
     }
-
     suspend fun deleteGuardian(guardianId:String,token:String): Response<BaseReponse>{
         return api.deleteGuardian(guardianId,"Bearer $token")
+    }
+
+    suspend fun updateUser(token: String?, email: String, name: String, phone: String): Response<UserResponse>{
+        val request = UserUpdateRequest(
+            email = email,
+            name = name,
+            phoneNo = phone
+        )
+        return api.updateUser("Bearer$token",request)
+    }
+
+    suspend fun UpdatePassword(token:String,email:String,newPassword:String,oldPassword:String): Response<ChangePasswordResponse>{
+        val request = ChangePasswordRequest(email = email,newPassword = newPassword,oldPassword =oldPassword)
+        return api.changeUserPassword("Bearer$token",request)
     }
 }

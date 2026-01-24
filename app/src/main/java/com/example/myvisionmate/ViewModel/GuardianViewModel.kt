@@ -64,7 +64,6 @@ class GuardianViewModel(private val repo: Repositary) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repo.getAllGuardian(token)
-
                 if (response.isSuccessful && response.body() != null) {
                     val listResponse = response.body()!!
 
@@ -119,5 +118,7 @@ class GuardianViewModel(private val repo: Repositary) : ViewModel() {
     fun resetResult() {
         _guardianResult.value = null
     }
+
+
 
 }
