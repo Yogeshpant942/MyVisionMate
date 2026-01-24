@@ -1,5 +1,6 @@
 package com.example.myvisionmate.ViewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myvisionmate.Models.Guardian
@@ -7,8 +8,10 @@ import com.example.myvisionmate.Repositary.Repositary
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class GuardianViewModel(private val repo: Repositary) : ViewModel() {
+    private val TAG = "GuardianViewModel"
 
     sealed class GuardianResult {
         data class Success(val message: String) : GuardianResult()
@@ -51,6 +54,7 @@ class GuardianViewModel(private val repo: Repositary) : ViewModel() {
                     _guardianResult.value = GuardianResult.Error(
                         "Failed to add guardian"
                     )
+
                 }
             } catch (e: Exception) {
                 _guardianResult.value = GuardianResult.Error(
@@ -63,24 +67,26 @@ class GuardianViewModel(private val repo: Repositary) : ViewModel() {
     fun loadGuardians(token: String) {
         viewModelScope.launch {
             try {
+                Log.d(TAG, "Calling getAllGuardian API")
                 val response = repo.getAllGuardian(token)
-                if (response.isSuccessful && response.body() != null) {
-                    val listResponse = response.body()!!
 
-                    if (listResponse.success && listResponse.data != null) {
-                        _guardian.value = listResponse.data.guardians
+                Log.d(TAG, "API response code = ${response.code()}")
+
+                if (response.isSuccessful && response.body() != null) {
+                    val body = response.body()!!
+                    Log.d(TAG, "API success = ${body.success}")
+
+                    if (body.success && body.data != null) {
+                        Log.d(TAG, "Guardians received = ${body.data.guardians.size}")
+                        _guardian.value = body.data.guardians
                     } else {
-                        _guardianResult.value =
-                            GuardianResult.Error(listResponse.message)
+                        Log.e(TAG, "API error message = ${body.message}")
                     }
                 } else {
-                    _guardianResult.value =
-                        GuardianResult.Error("failed to load guardian data")
+                    Log.e(TAG, "API failed, errorBody = ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                _guardianResult.value = GuardianResult.Error(
-                    e.message ?: "Network error"
-                )
+                Log.e(TAG, "Exception in loadGuardians()", e)
             }
         }
     }
@@ -118,7 +124,4 @@ class GuardianViewModel(private val repo: Repositary) : ViewModel() {
     fun resetResult() {
         _guardianResult.value = null
     }
-
-
-
 }

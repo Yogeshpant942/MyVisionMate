@@ -1,6 +1,7 @@
 package com.example.myvisionmate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,8 @@ class EmergencyContactFragment : Fragment() {
     private lateinit var binding: FragmentEmergencyContactBinding
     private lateinit var viewModel: GuardianViewModel
     private lateinit var guardianAdapter: GuardianAdapter
+    private val TAG = "EmergencyContactFragment"
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +51,7 @@ class EmergencyContactFragment : Fragment() {
         guardianAdapter = GuardianAdapter { guardian ->
             val token = getAuthToken()
             if (token != null) {
-                viewModel.deleteGuardian(token, guardian._id)
+                viewModel.deleteGuardian(guardian._id, token)
             } else {
                 Toast.makeText(requireContext(), "Login required", Toast.LENGTH_SHORT).show()
             }
@@ -66,6 +69,7 @@ class EmergencyContactFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.gaurdian.collect { guardians ->
+                Log.d(TAG, "Collected guardians list, size = ${guardians.size}")
                 updateUi(guardians)
             }
         }
@@ -91,6 +95,7 @@ class EmergencyContactFragment : Fragment() {
 
     private fun loadGuardian() {
         val token = getAuthToken()
+        Log.d(TAG, "loadGuardian() called, token = $token")
         if (token != null) {
             viewModel.loadGuardians(token)
         } else {
@@ -104,14 +109,19 @@ class EmergencyContactFragment : Fragment() {
     }
 
     private fun updateUi(guardians: List<Guardian>) {
+        Log.d(TAG, "updateUi() called with ${guardians.size} guardians")
+
         if (guardians.isEmpty()) {
+            Log.d(TAG, "Guardian list empty, showing empty state")
             binding.emptyStateLayout.visibility = View.VISIBLE
             binding.recyclerViewContacts.visibility = View.GONE
         } else {
+            Log.d(TAG, "Guardian list NOT empty, showing RecyclerView")
             binding.emptyStateLayout.visibility = View.GONE
             binding.recyclerViewContacts.visibility = View.VISIBLE
         }
 
+        Log.d(TAG, "Submitting list to adapter")
         guardianAdapter.submitList(guardians)
     }
 }

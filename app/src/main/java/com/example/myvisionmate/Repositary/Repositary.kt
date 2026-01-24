@@ -86,7 +86,12 @@ class Repositary(private val api: ApiInterface) {
         return api.updateUser("Bearer$token",request)
     }
 
-    suspend fun UpdatePassword(token:String,email:String,newPassword:String,oldPassword:String): Response<ChangePasswordResponse>{
+    suspend fun UpdatePassword(
+        token: String?,
+        email: String,
+        newPassword: String,
+        oldPassword: String
+    ): Response<ChangePasswordResponse>{
         val request = ChangePasswordRequest(email = email,newPassword = newPassword,oldPassword =oldPassword)
         return api.changeUserPassword("Bearer$token",request)
     }

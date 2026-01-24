@@ -71,5 +71,12 @@
         <action
             android:id="@+id/action_settingFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_emergencyContactFragment"
+            app:destination="@id/emergencyContactFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/emergencyContactFragment"
+        android:name="com.example.myvisionmate.EmergencyContactFragment"
+        android:label="EmergencyContactFragment" />
 </navigation>

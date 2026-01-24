@@ -1,5 +1,6 @@
 package com.example.visionmate.StartingInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,8 @@ import kotlinx.coroutines.launch
 class GuardiansSetupFragment : Fragment() {
     lateinit var binding: FragmentGuardiansSetupBinding
     private lateinit var  adapter : GuardianAdapter
+    private val TAG = "EmergencyContactFragment"
+
     lateinit var viewModel: GuardianViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +49,7 @@ class GuardiansSetupFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.gaurdian.collect { guardians ->
+                Log.d(TAG, "Collected guardians list, size = ${guardians.size}")
                 updateUi(guardians)
             }
         }
@@ -74,7 +78,7 @@ class GuardiansSetupFragment : Fragment() {
         adapter = GuardianAdapter{guardian->
             val token = getAuthToken()
             if(token!=null){
-                viewModel.deleteGuardian(token, guardian._id)
+                viewModel.deleteGuardian(guardian._id, token)
             }
             else {
                 Toast.makeText(requireContext(), "Login required", Toast.LENGTH_SHORT).show()
@@ -105,6 +109,8 @@ class GuardiansSetupFragment : Fragment() {
    }
     private fun loadGuardian(){
         val token = getAuthToken()
+        Log.d(TAG, "loadGuardian() called, token = $token")
+
         if(token!=null){
             viewModel.loadGuardians(token)
         }
@@ -121,5 +127,9 @@ class GuardiansSetupFragment : Fragment() {
             binding.tvEmptyState.visibility = View.GONE
             binding.rvGuardians.visibility = View.VISIBLE
         }
+        adapter.submitList(guardians)
+        Log.d(TAG, "RV visibility=${binding.rvGuardians.visibility}, itemCount=${adapter.itemCount}")
+
+
     }
 }

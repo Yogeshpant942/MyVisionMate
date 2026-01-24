@@ -1,5 +1,6 @@
 package com.example.myvisionmate
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,9 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.myvisionmate.Repositary.Repositary
 import com.example.myvisionmate.databinding.FragmentSettingBinding
+import com.example.visionmate.Factory.LogInAndSignUpFactory
 import com.example.visionmate.ViewModel.LoginAndSignUPViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -25,9 +29,17 @@ class SettingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingBinding.inflate(inflater,container,false)
+        pref = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val api: ApiInterface = RetrofitService.api
+        val repo = Repositary(api)
+        val factory = LogInAndSignUpFactory(repo)
+        viewModel = ViewModelProvider(this,factory).get(LoginAndSignUPViewModel::class.java)
         setUplisteners()
         UserobserverViewModel()
         PasswordObserveViewModel()
+        binding.btnManageGuardians.setOnClickListener {
+            findNavController().navigate(R.id.action_settingFragment_to_emergencyContactFragment)
+        }
         return binding.root
     }
     private fun setUplisteners() {

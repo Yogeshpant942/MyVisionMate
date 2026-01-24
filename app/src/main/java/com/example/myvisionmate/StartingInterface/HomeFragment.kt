@@ -25,6 +25,9 @@ class HomeFragment : Fragment() {
         binding.cardStartScanning.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_cameraFragment)
         }
+        binding.cardSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingFragment)
+        }
         return binding.root
     }
 
