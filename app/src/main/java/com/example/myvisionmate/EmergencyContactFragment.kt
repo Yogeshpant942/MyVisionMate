@@ -100,7 +100,7 @@ class EmergencyContactFragment : Fragment() {
         // CALL
         callButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:${9528650567}")
+                data = Uri.parse("tel:${guardian.phone}")
             }
             startActivity(intent)
             dialog.dismiss()
