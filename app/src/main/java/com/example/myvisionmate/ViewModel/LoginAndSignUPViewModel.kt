@@ -1,6 +1,7 @@
 package com.example.visionmate.ViewModel
 
 import android.content.Context
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -61,50 +62,77 @@ class LoginAndSignUPViewModel(private val repo: Repositary) : ViewModel() {
     /* -------------------- REGISTER -------------------- */
 
     fun register_user(name: String, password: String, email: String, phone: String) {
+
+        Log.d("AuthVM", "register_user called")
+        Log.d("AuthVM", "Input -> name=$name, email=$email, phone=$phone, passwordLength=${password.length}")
+
         if (name.isBlank() || email.isBlank() || password.isBlank() || phone.isBlank()) {
+            Log.e("AuthVM", "Validation failed: empty fields")
             _authResult.value = AuthResult.Error("All fields are required")
             return
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Log.e("AuthVM", "Validation failed: invalid email")
             _authResult.value = AuthResult.Error("Invalid email format")
             return
         }
 
         if (password.length < 6) {
+            Log.e("AuthVM", "Validation failed: password too short")
             _authResult.value = AuthResult.Error("Password must be at least 6 characters")
             return
         }
 
         if (phone.length != 10) {
+            Log.e("AuthVM", "Validation failed: phone length != 10")
             _authResult.value = AuthResult.Error("Phone number must be 10 digits")
             return
         }
 
         viewModelScope.launch {
-            val response = repo.registerUser(name, email, password, phone)
+            try {
+                Log.d("AuthVM", "Calling registerUser API")
 
-            if (response.isSuccessful && response.body() != null) {
-                val body = response.body()!!
-                if (body.success && body.data != null) {
-                    _authResult.value = AuthResult.Success(
-                        user = body.data.user,
-                        token = body.data.token,
-                        message = body.message
-                    )
+                val response = repo.registerUser(name, email, password, phone)
+
+                Log.d("AuthVM", "API response code = ${response.code()}")
+
+                if (response.isSuccessful && response.body() != null) {
+                    val body = response.body()!!
+                    Log.d("AuthVM", "API success = ${body.success}")
+
+                    if (body.success && body.data != null) {
+                        Log.d("AuthVM", "Registration SUCCESS, userId=${body.data.user.id}")
+
+                        _authResult.value = AuthResult.Success(
+                            user = body.data.user,
+                            token = body.data.token,
+                            message = body.message
+                        )
+                    } else {
+                        Log.e("AuthVM", "API error message: ${body.message}")
+                        _authResult.value = AuthResult.Error(body.message)
+                    }
                 } else {
-                    _authResult.value = AuthResult.Error(body.message)
+                    val errorMsg = when (response.code()) {
+                        400 -> "User already exists or invalid data"
+                        500 -> "Server error. Please try again later"
+                        else -> "Registration failed"
+                    }
+
+                    Log.e("AuthVM", "HTTP error: ${response.code()} -> $errorMsg")
+                    _authResult.value = AuthResult.Error(errorMsg)
                 }
-            } else {
-                val errorMsg = when (response.code()) {
-                    400 -> "User already exists or invalid data"
-                    500 -> "Server error. Please try again later"
-                    else -> "Registration failed"
-                }
-                _authResult.value = AuthResult.Error(errorMsg)
+            } catch (e: Exception) {
+                Log.e("AuthVM", "Exception during register_user", e)
+                _authResult.value = AuthResult.Error(
+                    e.message ?: "Network error"
+                )
             }
         }
     }
+
 
     /* -------------------- LOGIN -------------------- */
 

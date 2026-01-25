@@ -18,7 +18,11 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.visionmate.startinginterface.RegisterFragment" />
+        android:name="com.example.visionmate.startinginterface.RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="com.example.visionmate.StartingInterface.WelcomeFragment"

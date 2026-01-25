@@ -3,6 +3,7 @@ package com.example.myvisionmate
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,12 @@ class SettingFragment : Fragment() {
         val repo = Repositary(api)
         val factory = LogInAndSignUpFactory(repo)
         viewModel = ViewModelProvider(this,factory).get(LoginAndSignUPViewModel::class.java)
+        val name = pref.getString("user_name",null)
+        val email = pref.getString("user_email",null)
+        binding.tvUserName.text = name
+        Log.d("user_name",name.toString())
+        Log.d("user_email",email.toString())
+        binding.tvUserEmail.text = pref.getString("user_email",null)
         setUplisteners()
         UserobserverViewModel()
         PasswordObserveViewModel()
@@ -53,9 +60,9 @@ class SettingFragment : Fragment() {
     }
     private fun editProfile() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_edit_profile,null)
-        val emailEt: TextView = dialogView.findViewById(R.id.etProfileEmail)
+        val emailEt: TextView = dialogView.findViewById(R.id.tvProfileEmail)
         val nameEt:TextView = dialogView.findViewById(R.id.etProfileName)
-        val phoneNoEt:TextView = dialogView.findViewById(R.id.etProfilePhone)
+        val phoneNoEt:TextView = dialogView.findViewById(R.id.tvProfilePhone)
         val token = pref?.getString("auth_token","")
 
         emailEt.setText(pref.getString("user_email",""))
@@ -78,11 +85,12 @@ class SettingFragment : Fragment() {
                         viewModel.updateUser(token,email,name,phone)
                 }
             }
+            .show()
     }
 
     private fun changePassword(){
           val dialogView = layoutInflater.inflate(R.layout.dialog_change_password,null)
-         val emailEt: TextView = dialogView.findViewById(R.id.etEmail)
+         val emailEt: TextView = dialogView.findViewById(R.id.tvEmail)
          val newPasswordEt: TextView = dialogView.findViewById(R.id.etNewPassword)
          val oldPasswordEt: TextView = dialogView.findViewById(R.id.etCurrentPassword)
         val token = pref?.getString("auth_token","")
@@ -105,6 +113,8 @@ class SettingFragment : Fragment() {
                     viewModel.updatePassword(token,email,newPass,oldPass)
                 }
             }
+            .show()
+
     }
 
     private fun logOut() {

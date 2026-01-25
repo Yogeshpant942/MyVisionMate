@@ -22,7 +22,7 @@ import com.example.myvisionmate.databinding.FragmentGuardiansSetupBinding
 import kotlinx.coroutines.launch
 class GuardiansSetupFragment : Fragment() {
     lateinit var binding: FragmentGuardiansSetupBinding
-    private lateinit var  adapter : GuardianAdapter
+    private lateinit var  GuardianAdapter : GuardianAdapter
     private val TAG = "EmergencyContactFragment"
 
     lateinit var viewModel: GuardianViewModel
@@ -75,7 +75,7 @@ class GuardiansSetupFragment : Fragment() {
         }
     }
     fun setUpRecyclerView(){
-        adapter = GuardianAdapter{guardian->
+        GuardianAdapter = GuardianAdapter{guardian->
             val token = getAuthToken()
             if(token!=null){
                 viewModel.deleteGuardian(guardian._id, token)
@@ -87,7 +87,7 @@ class GuardiansSetupFragment : Fragment() {
         }
         binding.rvGuardians.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = adapter
+            adapter = GuardianAdapter
             setHasFixedSize(true)
         }
     }
@@ -127,8 +127,8 @@ class GuardiansSetupFragment : Fragment() {
             binding.tvEmptyState.visibility = View.GONE
             binding.rvGuardians.visibility = View.VISIBLE
         }
-        adapter.submitList(guardians)
-        Log.d(TAG, "RV visibility=${binding.rvGuardians.visibility}, itemCount=${adapter.itemCount}")
+        GuardianAdapter.submitList(guardians)
+        Log.d(TAG, "RV visibility=${binding.rvGuardians.visibility}, itemCount=${GuardianAdapter.itemCount}")
 
 
     }

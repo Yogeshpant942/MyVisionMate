@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myvisionmate.Models.Guardian
 import com.example.myvisionmate.databinding.ItemEmergencyContactBinding
-
-
 class GuardianAdapter(
     private val onDeleteClick:(Guardian)->Unit
 ): ListAdapter<Guardian, GuardianAdapter.GuardianViewHolder>(GuardianDiffCallBack()){
@@ -37,6 +35,10 @@ class GuardianAdapter(
                 tvGuardianPhone.text = guardian.phone
             root.contentDescription =
                 "Guardian ${guardian.name}, phone ${guardian.phone}. Hold button to remove contact."
+                binding.root.setOnLongClickListener{
+                    onDeleteClick(guardian)
+                    true
+                }
             }
         }
     }
