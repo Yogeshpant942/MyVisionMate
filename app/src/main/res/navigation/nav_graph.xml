@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.visionmate.LoginFragment">
+
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.visionmate.startinginterface.RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.visionmate.StartingInterface.WelcomeFragment"
+        android:label="WelcomeFragment" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_guardiansSetupFragment"
+            app:destination="@id/guardiansSetupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/guardiansSetupFragment"
+        android:name="com.example.visionmate.StartingInterface.GuardiansSetupFragment"
+        android:label="GuardiansSetupFragment" >
+        <action
+            android:id="@+id/action_guardiansSetupFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.myvisionmate.CameraFragment"
+        android:label="CameraFragment" />
+    <fragment
+        android:id="@+id/readTextFragment"
+        android:name="com.example.visionmate.ui.readtext.ReadTextFragment"
+        android:label="ReadTextFragment" />
+    <fragment
+        android:id="@+id/describeSurroundingsFragment"
+        android:name="com.example.visionmate.ui.describe.DescribeSurroundingsFragment"
+        android:label="DescribeSurroundingsFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.myvisionmate.StartingInterface.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_describeSurroundingsFragment"
+            app:destination="@id/describeSurroundingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_readTextFragment"
+            app:destination="@id/readTextFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.myvisionmate.SettingFragment"
+        android:label="SettingFragment" >
+        <action
+            android:id="@+id/action_settingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_emergencyContactFragment"
+            app:destination="@id/emergencyContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/emergencyContactFragment"
+        android:name="com.example.myvisionmate.EmergencyContactFragment"
+        android:label="EmergencyContactFragment" />
+</navigation>

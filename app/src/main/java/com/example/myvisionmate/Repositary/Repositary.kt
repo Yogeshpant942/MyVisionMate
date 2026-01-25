@@ -1,0 +1,97 @@
+package com.example.myvisionmate.Repositary
+
+import android.content.Context
+import com.example.myvisionmate.ApiInterface
+import com.example.myvisionmate.Models.BaseReponse
+import com.example.myvisionmate.Models.ChangePasswordRequest
+import com.example.myvisionmate.Models.ChangePasswordResponse
+import com.example.myvisionmate.Models.GuardianReponse
+import com.example.myvisionmate.Models.GuardianRequest
+import com.example.myvisionmate.Models.GuardiansListResponse
+import com.example.myvisionmate.Models.UserResponse
+import com.example.myvisionmate.Models.UserUpdateRequest
+import com.example.visionmate.Models.AuthResponse
+import com.example.visionmate.Models.userLoginRequest
+import com.example.visionmate.Models.userRegister
+import retrofit2.Response
+
+class Repositary(private val api: ApiInterface) {
+
+    suspend fun registerUser(
+        name: String,
+        email: String,
+        password: String,
+        phone: String
+    ): Response<AuthResponse> {
+        val registerRequest = userRegister(
+            name = name,
+            email = email,
+            password = password,
+            phoneNo = phone
+        )
+        return api.register(registerRequest)
+    }
+
+    suspend fun loginUser(
+        email: String,
+        password: String
+    ): Response<AuthResponse> {
+        val loginRequest = userLoginRequest(
+            email = email,
+            password = password
+        )
+        return api.login(loginRequest)
+    }
+
+    fun saveToken(token: String, context: Context) {
+        val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putString("auth_token", token).apply()
+    }
+
+    fun getToken(context: Context): String? {
+        val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        return prefs.getString("auth_token", null)
+    }
+
+    fun removeToken(context: Context) {
+        val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        prefs.edit().remove("auth_token").apply()
+    }
+
+    fun isLoggedIn(context: Context): Boolean {
+        return getToken(context) != null
+    }
+
+   suspend fun registerGuardian(token:String,name:String,phone: String): Response<GuardianReponse>{
+       val request = GuardianRequest(
+           name = name,
+           phone= phone
+       )
+       return api.registerGuardian("Bearer $token",request)
+    }
+
+    suspend fun getAllGuardian(token: String): Response<GuardiansListResponse>{
+        return api.getAllGuardian("Bearer $token")
+    }
+    suspend fun deleteGuardian(guardianId:String,token:String): Response<BaseReponse>{
+        return api.deleteGuardian(guardianId,"Bearer $token")
+    }
+
+    suspend fun updateUser(token: String?, email: String, name: String, phone: String): Response<UserResponse>{
+        val request = UserUpdateRequest(
+            email = email,
+            name = name,
+            phoneNo = phone
+        )
+        return api.updateUser("Bearer$token",request)
+    }
+    suspend fun UpdatePassword(
+        token: String?,
+        email: String,
+        newPassword: String,
+        oldPassword: String
+    ): Response<ChangePasswordResponse>{
+        val request = ChangePasswordRequest(email = email,newPassword = newPassword,oldPassword =oldPassword)
+        return api.changeUserPassword("Bearer$token",request)
+    }
+}

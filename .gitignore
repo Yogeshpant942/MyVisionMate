@@ -1,3 +1,17 @@
+# ================= ANDROID =================
+*.iml
+.gradle/
+local.properties
+.idea/
+build/
+captures/
+
+# ================= NODE / BACKEND =================
 node_modules/
 .env
-.vscode/
+npm-debug.log*
+yarn-error.log*
+
+# ================= OS =================
+.DS_Store
+Thumbs.db
