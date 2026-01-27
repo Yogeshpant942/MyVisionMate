@@ -42,7 +42,7 @@ interface ApiInterface {
     @PATCH("guardian/guardian_update/:id")
     suspend fun updateGuardian(@Path("id") guardianId:String, @Header("Authorization")token:String, @Body request: GuardianRequest): Response<GuardianReponse>
 
-    @DELETE("delete/:id")
+    @DELETE("delete/{id}")
     suspend fun deleteGuardian(@Path("id") guardianId:String,@Header("Authorization")token:String): Response<BaseReponse>
 
 

@@ -91,10 +91,10 @@ class GuardianViewModel(private val repo: Repositary) : ViewModel() {
         }
     }
 
-    fun deleteGuardian(guardianId: String, token: String) {
+    fun deleteGuardian(guardianId: String, token: String?) {
         viewModelScope.launch {
             try {
-                val response = repo.deleteGuardian(guardianId, token)
+                val response = repo.deleteGuardian(guardianId, token!!)
 
                 if (response.isSuccessful && response.body() != null) {
                     val guardianResponse = response.body()!!

@@ -36,7 +36,10 @@ class GuardianAdapter(
             root.contentDescription =
                 "Guardian ${guardian.name}, phone ${guardian.phone}. Hold button to remove contact."
                 binding.root.setOnLongClickListener{
-                    onDeleteClick(guardian)
+                    val pos = bindingAdapterPosition
+                    if(pos!= RecyclerView.NO_POSITION){
+                    onDeleteClick(getItem(pos))
+                    }
                     true
                 }
             }
@@ -51,4 +54,5 @@ class GuardianDiffCallBack : DiffUtil.ItemCallback<Guardian>() {
     override fun areContentsTheSame(oldItem: Guardian, newItem: Guardian): Boolean {
         return oldItem == newItem
     }
+
 }
