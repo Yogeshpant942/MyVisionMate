@@ -14,10 +14,8 @@ class VisionMateApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize Firebase
         Firebase.initialize(this)
 
-        // Use Debug App Check for development
         Firebase.appCheck.installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance()
         )

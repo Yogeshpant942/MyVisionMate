@@ -29,7 +29,6 @@ class RegisterFragment : Fragment() {
     ): View {
 
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        // ---- ViewModel setup ----
         val api: ApiInterface = RetrofitService.api
         val repository = Repositary(api)
         val factory = LogInAndSignUpFactory(repository)

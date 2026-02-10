@@ -46,7 +46,6 @@ class GuardiansSetupFragment : Fragment() {
                 updateUi(guardians)
             }
         }
-        //observe result
         lifecycleScope.launch {
             viewModel.guardianResult.collect { result ->
                 when(result){
