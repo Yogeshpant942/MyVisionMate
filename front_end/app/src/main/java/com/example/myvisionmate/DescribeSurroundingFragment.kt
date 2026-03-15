@@ -32,7 +32,6 @@ class DescribeSurroundingsFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
     private var imageCapture: ImageCapture? = null
 
-    // Initialize Gemini service
     private val geminiService = GeminiService()
 
     private val TAG = "DescribeFragment"
@@ -150,12 +149,10 @@ class DescribeSurroundingsFragment : Fragment() {
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
                     Log.d(TAG, "Image captured successfully")
 
-                    // Convert ImageProxy to Bitmap
                     val bitmap = imageProxyToBitmap(imageProxy)
                     imageProxy.close()
 
                     if (bitmap != null) {
-                        // Send to Gemini AI
                         analyzeWithGemini(bitmap)
                     } else {
                         requireActivity().runOnUiThread {
@@ -182,14 +179,12 @@ class DescribeSurroundingsFragment : Fragment() {
 
                 Log.d(TAG, "Sending image to Gemini API...")
 
-                // Call Gemini service
                 val result = geminiService.describeScene(bitmap)
 
                 requireActivity().runOnUiThread {
                     result.onSuccess { description ->
                         Log.d(TAG, "Received description: ${description.take(100)}...")
 
-                        // Display and speak description
                         binding.tvDescription.text = description
                         speak(description)
 

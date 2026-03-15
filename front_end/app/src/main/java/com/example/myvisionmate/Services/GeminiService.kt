@@ -72,11 +72,7 @@ class GeminiService {
         }
     }
 
-    /**
-     * Read and describe text from image (for OCR enhancement)
-     * @param bitmap - Image containing text
-     * @return Result with text content or error
-     */
+
     suspend fun readText(bitmap: Bitmap): Result<String> = withContext(Dispatchers.IO) {
         try {
             val response = generativeModel.generateContent(
