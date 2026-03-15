@@ -1,13 +1,16 @@
 package com.example.myvisionmate
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.myvisionmate.Repositary.Repositary
+import com.example.myvisionmate.Services.EmergencyService
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -15,6 +18,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        val serviceIntent = Intent(this, EmergencyService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 

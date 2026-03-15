@@ -126,7 +126,6 @@ class SettingFragment : Fragment() {
             Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
         }
     }
-
     fun UserobserverViewModel(){
         viewModel.updateResult.observe(viewLifecycleOwner, Observer{result->
             when(result){
