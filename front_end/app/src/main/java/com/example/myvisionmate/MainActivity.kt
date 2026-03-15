@@ -1,16 +1,17 @@
 package com.example.myvisionmate
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.provider.Settings
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.myvisionmate.Repositary.Repositary
 import com.example.myvisionmate.Services.EmergencyService
+import com.example.myvisionmate.Services.ShakeLaunchService
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -21,9 +22,18 @@ class MainActivity : AppCompatActivity() {
         val serviceIntent = Intent(this, EmergencyService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
 
+           val intent = Intent(this, ShakeLaunchService::class.java)
+   ContextCompat.startForegroundService(this, intent)
+
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-
+        if (!Settings.canDrawOverlays(this)) {
+            startActivity(
+                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName"))
+            )
+        }
         checkLoginStatus()
     }
 

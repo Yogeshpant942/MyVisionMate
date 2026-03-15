@@ -51,13 +51,11 @@ class EmergencyService: Service() {
         private const val TAG = "EmergencyService"
         private const val CHANNEL_ID = "emergency_channel"
         private const val NOTIF_ID = 1001
-
         private const val FALL_THRESHOLD = 25.0
 
         private const val VOICE_TIMEOUT_MS = 10_000L
 
         private const val FALL_COOLDOWN_MS = 30_000L
-
         // ── CONFIGURE THESE ────────────────────────────────────────────────
         private const val GUARDIAN_PHONE = "+911234567890"
         private const val BACKEND_URL    = "https://your-backend.com/api/emergency"
@@ -101,6 +99,7 @@ class EmergencyService: Service() {
         speechRecognizer?.destroy()
         serviceScope.coroutineContext[Job.Key]?.cancel()
     }
+
     override fun onBind(intent: Intent?): IBinder? = null
 
 
@@ -131,7 +130,6 @@ class EmergencyService: Service() {
         }
         tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
     }
-
     private fun startFallDetection() {
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
@@ -139,7 +137,7 @@ class EmergencyService: Service() {
             sensorManager.registerListener(
                 fallSensorListener,
                 accelerometer,
-                SensorManager.SENSOR_DELAY_NORMAL
+                SensorManager.SENSOR_DELAY_UI
             )
         } else {
             Log.e(TAG, "Accelerometer not available on this device")
@@ -164,9 +162,6 @@ class EmergencyService: Service() {
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
     }
-
-    // ── Emergency Flow ─────────────────────────────────────────────────────
-
     private fun onFallDetected() {
         isHandlingFall = true
         fetchLastLocation() // refresh location at time of fall
@@ -188,7 +183,6 @@ class EmergencyService: Service() {
             handleTimeout()
             return
         }
-
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -217,7 +211,6 @@ class EmergencyService: Service() {
                 handleTimeout()
             }
 
-            // Required overrides — no-ops
             override fun onReadyForSpeech(params: Bundle?) {}
             override fun onBeginningOfSpeech() {}
             override fun onRmsChanged(rmsdB: Float) {}
@@ -229,7 +222,6 @@ class EmergencyService: Service() {
 
         speechRecognizer?.startListening(recognizerIntent)
 
-        // Safety timeout — if recognition never fires onResults or onError
         timeoutJob = serviceScope.launch {
             delay(VOICE_TIMEOUT_MS + 2000)
             Log.d(TAG, "Safety timeout triggered")
@@ -240,7 +232,6 @@ class EmergencyService: Service() {
 
     private fun handleUserResponse(userSaid: String) {
         when {
-            // User wants a phone call
             "call" in userSaid -> {
                 speak("Calling your guardian now.") {
                     callGuardian()
@@ -418,7 +409,7 @@ class EmergencyService: Service() {
         Log.d(TAG, "Fall state reset — monitoring resumed")
     }
 
-    // ── Foreground Notif ication ────────────────────────────────────────────
+    // ── Foreground Notification ────────────────────────────────────────────
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
@@ -429,8 +420,8 @@ class EmergencyService: Service() {
         ).apply {
             description = "Monitors for falls in the background"
         }
-        val manager = Context.getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
+//        val manager = Context.getSystemService(NotificationManager::class.java)
+//        manager.createNotificationChannel(channel)
     }
 
     private fun buildNotification(): Notification {
