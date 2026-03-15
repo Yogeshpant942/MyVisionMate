@@ -20,6 +20,12 @@
         android:name="android.permission.SEND_SMS"
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+       <uses-permission android:name="android.permission.VIBRATE"/>
+      <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+         <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
+
 
     <application
         android:name="com.example.myvisionmate.VisionMateApplication"
@@ -47,6 +53,11 @@
             android:name=".Services.EmergencyService"
             android:foregroundServiceType="health"
             android:exported="false" />
+
+           <service
+            android:name=".Services.ShakeLaunchService"
+           android:foregroundServiceType="health"
+            android:exported="false"/>
 
 
     </application>
