@@ -11,25 +11,25 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.myvisionmate.MainActivity
 import kotlin.math.sqrt
 
 class ShakeLaunchService : Service(), SensorEventListener {
-
     companion object {
         private const val TAG = "ShakeLaunch"
         private const val CHANNEL_ID = "shake_launch_channel"
         private const val NOTIF_ID   = 2001
 
         private const val SHAKE_THRESHOLD = 10.0f
-
         private const val REQUIRED_SHAKE_DURATION_MS = 10_000L
 
         private const val SHAKE_GAP_TOLERANCE_MS = 2000L
@@ -40,7 +40,7 @@ class ShakeLaunchService : Service(), SensorEventListener {
         private val VIBRATE_MILESTONES_MS = listOf(5_000L)
     }
 
-    // ── State ──────────────────────────────────────────────────────────────
+
     private lateinit var sensorManager: SensorManager
     private lateinit var vibrator: Vibrator
     private val handler = Handler(Looper.getMainLooper())
@@ -51,8 +51,8 @@ class ShakeLaunchService : Service(), SensorEventListener {
     private var isShaking         = false
     private val milestonesReached = mutableSetOf<Long>()
 
-    // ── Lifecycle ──────────────────────────────────────────────────────────
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -90,8 +90,8 @@ class ShakeLaunchService : Service(), SensorEventListener {
         }
     }
 
-    // ── Sensor Callback ────────────────────────────────────────────────────
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSensorChanged(event: SensorEvent) {
         val x = event.values[0]
         val y = event.values[1]
@@ -112,10 +112,8 @@ class ShakeLaunchService : Service(), SensorEventListener {
             } else {
                 val elapsed = now - shakeStartTime
 
-                // Give vibration feedback at milestones so user knows progress
                 checkMilestones(elapsed)
 
-                // Check if user has shaken for the full required duration
                 if (elapsed >= REQUIRED_SHAKE_DURATION_MS) {
                     val timeSinceLastLaunch = now - lastLaunchTime
                     if (timeSinceLastLaunch > LAUNCH_COOLDOWN_MS) {
@@ -125,7 +123,6 @@ class ShakeLaunchService : Service(), SensorEventListener {
                 }
             }
         } else {
-            // ── No shake — check if gap exceeds tolerance ──────────────────
             if (isShaking) {
                 val gapSinceLastShake = now - lastShakeTime
                 if (gapSinceLastShake > SHAKE_GAP_TOLERANCE_MS) {
@@ -141,7 +138,7 @@ class ShakeLaunchService : Service(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkMilestones(elapsed: Long) {
         for (milestone in VIBRATE_MILESTONES_MS) {
             if (elapsed >= milestone && !milestonesReached.contains(milestone)) {
@@ -154,48 +151,60 @@ class ShakeLaunchService : Service(), SensorEventListener {
             }
         }
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onShakeDurationReached() {
-        Log.d(TAG, "15 seconds of shaking reached — launching VisionMate!")
 
-        // Stop sensor while launching to prevent re-trigger
+        Log.d(TAG, "10 seconds of shaking reached — launching VisionMate!")
+
         sensorManager.unregisterListener(this)
 
         vibratePattern(longArrayOf(0, 400))
 
-        isShaking      = false
+        isShaking = false
         shakeStartTime = 0L
         lastLaunchTime = System.currentTimeMillis()
         milestonesReached.clear()
 
         handler.postDelayed({
             try {
-                val intent = Intent(this@ShakeLaunchService, MainActivity::class.java).apply {
+
+                val intent = Intent(this, MainActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 }
-                startActivity(intent)
-                Log.d(TAG, "startActivity called successfully")
+
+                val pendingIntent = PendingIntent.getActivity(
+                    this,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+
+                pendingIntent.send()
+
+                Log.d(TAG, "PendingIntent launched MainActivity")
+
             } catch (e: Exception) {
                 Log.e(TAG, "Launch failed: ${e.message}")
             }
 
-            // Re-register sensor after launch
-            handler.postDelayed({ startShakeDetection() }, 3000L)
+            handler.postDelayed({
+                startShakeDetection()
+            }, 3000L)
 
-        }, 300L) // small delay to let vibration finish first
+        }, 300L)
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun vibratePattern(pattern: LongArray) {
         vibrator.vibrate(
-            VibrationEffect.createWaveform(pattern, -1) // -1 = no repeat
+            VibrationEffect.createWaveform(pattern, -1)
         )
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
             CHANNEL_ID,
