@@ -1,4 +1,6 @@
 package com.example.visionmate.StartingInterface
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -24,6 +26,7 @@ class GuardiansSetupFragment : Fragment() {
     lateinit var binding: FragmentGuardiansSetupBinding
     private lateinit var  GuardianAdapter : GuardianAdapter
     private val TAG = "EmergencyContactFragment"
+    private val guardianNumber = mutableListOf<String>()
 
     lateinit var viewModel: GuardianViewModel
     override fun onCreateView(
@@ -42,6 +45,8 @@ class GuardiansSetupFragment : Fragment() {
         binding.btnNext.setOnClickListener {
             findNavController().navigate(R.id.action_guardiansSetupFragment_to_homeFragment)
         }
+
+
         return binding.root
     }
 
@@ -96,7 +101,12 @@ class GuardiansSetupFragment : Fragment() {
         binding.btnAddGuardian.setOnClickListener {
             val name = binding.etGuardianName.text.toString().trim()
             val phone = binding.etGuardianPhone.text.toString().trim()
-           val token = getAuthToken()
+            guardianNumber.add(phone)
+            val no_prefs = requireContext().getSharedPreferences("visionmate", Context.MODE_PRIVATE)
+            no_prefs.edit().putStringSet("guardian_no",guardianNumber.toSet()).apply()
+            Log.d(TAG,"Guardian saved: $phone")
+
+            val token = getAuthToken()
           if(token!=null) {
               viewModel.addGuardian(token, name, phone) }
             else{

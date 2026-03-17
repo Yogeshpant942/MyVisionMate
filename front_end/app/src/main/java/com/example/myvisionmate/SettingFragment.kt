@@ -31,6 +31,7 @@ class SettingFragment : Fragment() {
     ): View? {
         binding = FragmentSettingBinding.inflate(inflater,container,false)
         pref = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
         val api: ApiInterface = RetrofitService.api
         val repo = Repositary(api)
         val factory = LogInAndSignUpFactory(repo)
@@ -44,6 +45,7 @@ class SettingFragment : Fragment() {
         setUplisteners()
         UserobserverViewModel()
         PasswordObserveViewModel()
+        setContactCount()
         binding.btnManageGuardians.setOnClickListener {
             findNavController().navigate(R.id.action_settingFragment_to_emergencyContactFragment)
         }
@@ -156,6 +158,12 @@ class SettingFragment : Fragment() {
         }
 
     }
+
+    fun setContactCount(){
+        val pref_contact = requireContext().getSharedPreferences("visionmate", Context.MODE_PRIVATE)
+        val no_count = pref_contact.getStringSet("guardian_no", emptySet())
+
+        binding.tvGuardianCount.text = "${no_count?.size}"    }
 
 
 }

@@ -1,7 +1,6 @@
 package com.example.myvisionmate.Services
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
@@ -23,25 +22,19 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.*
 import java.util.Locale
 import kotlin.math.sqrt
-
 class EmergencyService : Service() {
-
     companion object {
         private const val TAG = "EmergencyService"
         private const val CHANNEL_ID = "emergency_channel"
         private const val NOTIF_ID = 1001
-
-        private const val FALL_THRESHOLD = 25.0
+        private const val FALL_THRESHOLD = 20.0
         private const val VOICE_TIMEOUT_MS = 10_000L
-        private const val FALL_COOLDOWN_MS = 30_000L
-
-        private const val GUARDIAN_PHONE = "+911234567890"
+        private const val FALL_COOLDOWN_MS = 5_000L
+        var GUARDIAN_PHONE:String = ""
     }
-
     private lateinit var sensorManager: SensorManager
     private lateinit var tts: TextToSpeech
     private lateinit var fusedLocationClient: com.google.android.gms.location.FusedLocationProviderClient
-
     private var speechRecognizer: SpeechRecognizer? = null
     private var isTtsReady = false
     private var isHandlingFall = false
@@ -49,7 +42,6 @@ class EmergencyService : Service() {
     private var timeoutJob: Job? = null
     private val serviceScope = CoroutineScope(Dispatchers.Main + Job())
     private var lastLocation: Location? = null
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
@@ -62,6 +54,16 @@ class EmergencyService : Service() {
 
         initTTS()
         fetchLastLocation()
+        val no_prefs = getSharedPreferences("visionmate", Context.MODE_PRIVATE)
+
+        val numbers = no_prefs.getStringSet("guardian_no", emptySet())
+
+        if (!numbers.isNullOrEmpty()) {
+            GUARDIAN_PHONE = numbers.random()
+        } else {
+            Log.e(TAG, "No guardian numbers saved!")
+            GUARDIAN_PHONE = "+919528659567"
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -79,8 +81,6 @@ class EmergencyService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
-
     private fun initTTS() {
         tts = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -111,7 +111,6 @@ class EmergencyService : Service() {
         tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, "tts")
     }
 
-
     private fun startFallDetection() {
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -135,23 +134,25 @@ class EmergencyService : Service() {
             val z = event.values[2]
 
             val magnitude = sqrt((x * x + y * y + z * z).toDouble())
+            Log.d(TAG, "Sensor values -> x:$x y:$y z:$z")
+            Log.d(TAG, "Acceleration magnitude: $magnitude")
+
 
             if (magnitude > FALL_THRESHOLD) {
+                Log.d(TAG, "Potential FALL detected!")
 
                 val now = System.currentTimeMillis()
 
                 if (!isHandlingFall && now - lastFallTime > FALL_COOLDOWN_MS) {
+                    Log.d(TAG, "Fall confirmed. Triggering emergency flow.")
 
                     lastFallTime = now
                     onFallDetected()
                 }
             }
         }
-
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
     }
-
-
     private fun onFallDetected() {
 
         isHandlingFall = true
@@ -160,7 +161,16 @@ class EmergencyService : Service() {
         speak(
             "Fall detected. Are you okay? Say call, message, or cancel."
         ) {
+            Log.d(TAG, "TTS finished speaking. Starting voice recognition.")
+
             startListeningForResponse()
+        }
+        serviceScope.launch {
+            delay(15000)
+            if(isHandlingFall){
+                Log.d(TAG,"Force resetting fall state")
+                resetFallState()
+            }
         }
     }
 
@@ -222,7 +232,6 @@ class EmergencyService : Service() {
     private fun handleUserResponse(text: String) {
 
         when {
-
             "call" in text -> {
                 speak("Calling guardian") {
                     callGuardian()
@@ -236,7 +245,6 @@ class EmergencyService : Service() {
                     resetFallState()
                 }
             }
-
             "cancel" in text || "okay" in text -> {
                 speak("Okay alert cancelled") {
                     resetFallState()
@@ -249,14 +257,10 @@ class EmergencyService : Service() {
 
 
     private fun handleTimeout() {
-
         if (!isHandlingFall) return
-
         speak("No response detected. Sending emergency alert") {
-
             callGuardian()
             sendEmergencySMS()
-
             resetFallState()
         }
     }
@@ -342,10 +346,7 @@ class EmergencyService : Service() {
 
         manager.createNotificationChannel(channel)
     }
-
-
     private fun buildNotification(): Notification {
-
         val intent = Intent(this, MainActivity::class.java)
 
         val pendingIntent = PendingIntent.getActivity(
