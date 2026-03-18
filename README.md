@@ -48,7 +48,7 @@ Built entirely with **Kotlin**, featuring a robust **Kotlin backend** and modern
 - 🎯 **Offline Capability** - Works on-device without internet connectivity
 
 ### User Experience
-- 🎨 **Modern UI** - Built with Jetpack Compose for beautiful, responsive interfaces
+- 🎨 **Modern UI** - Built with Xml Layout, responsive interfaces
 - 📱 **Native Performance** - Optimized for Android platform
 - 🔒 **Privacy-First** - All processing done locally, no cloud dependency required
 - 🚀 **Fast & Responsive** - Smooth animations and instant results
@@ -86,21 +86,17 @@ MyVisionMate (100% Kotlin)
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: Jetpack Compose (Modern declarative UI)
 - **Architecture**: MVVM with LiveData/StateFlow
-- **Image Handling**: Coil, Glide, or native solutions
-- **Navigation**: Jetpack Navigation Component
+- **Image Handling**:  Glide or native solutions
 - **Dependency Injection**: Hilt/Dagger
 - **Permissions**: AndroidX Permissions Library
 
 ### Backend
 - **Language**: Kotlin
-- **Framework**: Ktor, Spring Boot Kotlin, or custom
 - **ML/AI**: 
-  - TensorFlow Lite (for on-device inference)
   - ML Kit (Google's ML solutions)
   - OpenCV (for image processing)
-- **Database**: Room, Firebase Firestore, or SQLite
+- **Database**:MongoDB
 - **Build Tool**: Gradle with Kotlin DSL
 
 ### Platform Support
@@ -206,30 +202,6 @@ cd front_end
 3. **Analyze** - Tap the analyze button to process the image
 4. **View Results** - Instant results with detailed information
 
-### Code Examples
-
-**Backend - Vision Processing**
-```kotlin
-// src/main/kotlin/com/myvisionmate/service/VisionService.kt
-class VisionService {
-    fun analyzeImage(imagePath: String): AnalysisResult {
-        val bitmap = BitmapFactory.decodeFile(imagePath)
-        return processWithML(bitmap)
-    }
-}
-```
-
-**Frontend - Compose UI**
-```kotlin
-// front_end/app/src/main/kotlin/com/myvisionmate/ui/screens/AnalysisScreen.kt
-@Composable
-fun AnalysisScreen(viewModel: AnalysisViewModel) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        ImageUploadSection()
-        ResultsDisplay(viewModel.analysisResult)
-    }
-}
-```
 
 ### API Endpoints
 
