@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.example.myvisionmate.CameraFragment"
+        android:name="com.example.myvisionmate.MainInterface.CameraFragment"
         android:label="CameraFragment" />
     <fragment
         android:id="@+id/readTextFragment"

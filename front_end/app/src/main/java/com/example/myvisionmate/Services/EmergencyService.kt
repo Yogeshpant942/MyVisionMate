@@ -134,17 +134,13 @@ class EmergencyService : Service() {
             val z = event.values[2]
 
             val magnitude = sqrt((x * x + y * y + z * z).toDouble())
-            Log.d(TAG, "Sensor values -> x:$x y:$y z:$z")
-            Log.d(TAG, "Acceleration magnitude: $magnitude")
 
 
             if (magnitude > FALL_THRESHOLD) {
-                Log.d(TAG, "Potential FALL detected!")
 
                 val now = System.currentTimeMillis()
 
                 if (!isHandlingFall && now - lastFallTime > FALL_COOLDOWN_MS) {
-                    Log.d(TAG, "Fall confirmed. Triggering emergency flow.")
 
                     lastFallTime = now
                     onFallDetected()

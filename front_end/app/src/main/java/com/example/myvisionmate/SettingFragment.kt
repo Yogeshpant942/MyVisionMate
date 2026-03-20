@@ -89,7 +89,6 @@ class SettingFragment : Fragment() {
             }
             .show()
     }
-
     private fun changePassword(){
           val dialogView = layoutInflater.inflate(R.layout.dialog_change_password,null)
          val emailEt: TextView = dialogView.findViewById(R.id.tvEmail)
@@ -116,7 +115,6 @@ class SettingFragment : Fragment() {
                 }
             }
             .show()
-
     }
 
     private fun logOut() {
