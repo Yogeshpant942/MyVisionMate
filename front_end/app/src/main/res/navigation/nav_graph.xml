@@ -81,6 +81,6 @@
     </fragment>
     <fragment
         android:id="@+id/emergencyContactFragment"
-        android:name="com.example.myvisionmate.EmergencyContactFragment"
+        android:name="com.example.myvisionmate.MainInterface.EmergencyContactFragment"
         android:label="EmergencyContactFragment" />
 </navigation>
