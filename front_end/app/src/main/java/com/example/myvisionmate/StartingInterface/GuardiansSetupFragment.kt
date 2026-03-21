@@ -38,7 +38,7 @@ class GuardiansSetupFragment : Fragment() {
         val repo = Repositary(api)
         val factory = GuardianViewModelFactory(repo)
         viewModel = ViewModelProvider(this,factory).get(GuardianViewModel::class)
-       setUpUI()
+        setUpUI()
         setUpRecyclerView()
         observeViewModel()
         loadGuardian()
@@ -107,16 +107,16 @@ class GuardiansSetupFragment : Fragment() {
             Log.d(TAG,"Guardian saved: $phone")
 
             val token = getAuthToken()
-          if(token!=null) {
-              viewModel.addGuardian(token, name, phone) }
+            if(token!=null) {
+                viewModel.addGuardian(token, name, phone) }
             else{
-              Toast.makeText(context, "Please login first", Toast.LENGTH_SHORT).show()
-          }
+                Toast.makeText(context, "Please login first", Toast.LENGTH_SHORT).show()
+            }
         }
     }
-   private fun getAuthToken():String?{
-       return requireContext().getSharedPreferences("app_prefs",0).getString("auth_token",null)
-   }
+    private fun getAuthToken():String?{
+        return requireContext().getSharedPreferences("app_prefs",0).getString("auth_token",null)
+    }
     private fun loadGuardian(){
         val token = getAuthToken()
         Log.d(TAG, "loadGuardian() called, token = $token")
@@ -139,7 +139,5 @@ class GuardiansSetupFragment : Fragment() {
         }
         GuardianAdapter.submitList(guardians)
         Log.d(TAG, "RV visibility=${binding.rvGuardians.visibility}, itemCount=${GuardianAdapter.itemCount}")
-
-
     }
 }
