@@ -1,29 +1,74 @@
-# My Vision Mate
+# MyVisionMate
 
 ## About
-My Vision Mate uses Kotlin (XML) for the frontend and Node.js/MongoDB for the backend.
-
-## Tech Stack
-- **Frontend:** Kotlin with XML layouts  
-- **Backend:** Node.js/Express/MongoDB
+MyVisionMate is an innovative application that uses XML (Android Layout) for the frontend and integrates with a Node.js/MongoDB backend. This combination allows for a seamless user experience and efficient data handling.
 
 ## Architecture
 ![Architecture Diagram](path/to/architecture_diagram.png)
+*XML Layout Frontend* <br>
+*Node.js Backend*  
+
+## Tech Stack
+- **Frontend:** XML (Android Layout)  
+- **Backend:** Node.js with npm  
+- **Database:** MongoDB  
 
 ## Backend Setup
-To set up the backend, use npm instead of gradle:
+To get started with the backend, follow these instructions:
 ```bash
 npm install
+npm run start
 ```
 
 ## Project Structure
-- `frontend/`  
-  Contains the Kotlin XML frontend files. 
-- `backend/`  
-  Contains the Node.js backend files.  
+```
+myvisionmate/
+├── backend/
+│   ├── package.json
+│   ├── server.js
+│   └── ...other files
+└── frontend/
+    ├── layouts/
+    └── ...other files
+```
 
-## Showcase
-<!-- Commented out for now -->
-- Feature 1
-- Feature 2
+## Features  
+[Keep intact]
 
+## Getting Started  
+[Keep intact]
+
+## Installation  
+[Keep intact]
+
+## Usage  
+[Keep intact]
+
+## Contributing  
+[Keep intact]
+
+## Testing  
+[Keep intact]
+
+## Building & Deployment  
+[Keep intact]
+
+## Performance Metrics  
+[Keep intact]
+
+## Security & Privacy  
+[Keep intact]
+
+## Resources & Documentation  
+[Keep intact]
+
+## License  
+[Keep intact]
+
+## Contact & Support  
+[Keep intact]
+
+## Acknowledgments  
+[Keep intact]
+
+<!-- ## Showcase  -->
